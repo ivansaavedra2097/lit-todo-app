@@ -9,6 +9,11 @@ export class AppView extends LitElement {
                 padding: 0;
                 box-sizing: border-box;
             }
+            main {
+                height: calc( 100vh - 60px );
+                width: 100vw;
+                background-color: #f2f2f2;
+            }
         `
     }
 
@@ -29,7 +34,12 @@ export class AppView extends LitElement {
 
 
     render() {
-        return html`<my-navbar .username="${this.user?.username}"></my-navbar>`
+        return html`
+            <my-navbar .username="${this.user?.username}"></my-navbar>
+            <main>
+                <todo-form></todo-form>
+            </main>
+        `
     }
 }
 
