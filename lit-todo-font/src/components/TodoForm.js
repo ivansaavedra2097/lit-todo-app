@@ -4,18 +4,42 @@ export class TodoForm extends LitElement {
 
     static get styles() {
         return css`
-            textarea {
+            :host {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            form {
                 width: 100%;
                 max-width: 500px;
-                height: 150px;
-                padding: 12px 20px;
-                box-sizing: border-box;
-                border: 2px solid #ccc;
-                border-radius: 4px;
-                background-color: #f8f8f8;
-                font-size: 16px;
-                resize: none;
-                outline: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                background-color: white;
+                padding: 30px;
+                border-radius: 8px;
+            }
+            button {
+                align-self: center;
+                width: calc(100% - 10px);
+                padding: 5px;
+                text-transform: uppercase;
+                font-size: 14px;
+                letter-spacing: 1px;
+                cursor: pointer;
+                background-color: #0060bdcf;
+                color: white;
+                font-weight: 600;
+                border-radius: 3px;
+                border: none;
+            }
+            button:hover{
+                background-color: #036cd1cf;
+                color: #fdfdfd;
+            }
+            button:disabled {
+                background-color: gray;
+                cursor: auto;
             }
         `
     }
@@ -33,7 +57,7 @@ export class TodoForm extends LitElement {
     constructor() {
         super();
         this.todo = {
-            title: "",
+            title: "titulo",
             description: ""
         }
     }
@@ -46,8 +70,9 @@ export class TodoForm extends LitElement {
     render() {
         return html`
             <form>
-                <text-input label="Title"></text-input>
-                <textarea-input label="Description"></textarea-input>
+                <text-input label="Title" .value="${this.todo.title}"></text-input>
+                <textarea-input label="Description" .value="${this.todo.description}"></textarea-input>
+                <button ?disabled="${true}">create</button>
             </form>
         `
     }

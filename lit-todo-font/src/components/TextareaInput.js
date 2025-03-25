@@ -74,12 +74,10 @@ export class TextareaInput extends LitElement {
     }
 
     onFocus(e) {
-        console.log('focused')
         this.focused = true;
     }
 
     onBlur(e) {
-        console.log('blur')
         this.focused = false;
     }
 
