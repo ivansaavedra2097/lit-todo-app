@@ -1,11 +1,29 @@
-import { html, LitElement } from "lit-element";
+import { css, html, LitElement } from "lit-element";
 
 export class TodoForm extends LitElement {
+
+    static get styles() {
+        return css`
+            textarea {
+                width: 100%;
+                max-width: 500px;
+                height: 150px;
+                padding: 12px 20px;
+                box-sizing: border-box;
+                border: 2px solid #ccc;
+                border-radius: 4px;
+                background-color: #f8f8f8;
+                font-size: 16px;
+                resize: none;
+                outline: none;
+            }
+        `
+    }
 
     static get is() {
         return "todo-form";
     }
-    
+
     static get properties() {
         return {
             todo: { type: Object }
@@ -21,20 +39,21 @@ export class TodoForm extends LitElement {
     }
 
     handleChange(e) {
-        const { name, value } = e.target; 
+        const { name, value } = e.target;
         this.todo[name] = value;
     }
 
     render() {
         return html`
             <form>
-                <div class="form-control">
-                    <label>Title</label>
-                    <input type="text" name="title" @input="${this.handleChange}" />
+                <text-input label="Title"></text-input>
+                <div>
+                    <label for="todo-textarea">Description</label>
+                    <textarea id="todo-textarea"></textarea>
                 </div>
             </form>
         `
     }
 }
 
-customElements.define( TodoForm.is, TodoForm );
+customElements.define(TodoForm.is, TodoForm);
