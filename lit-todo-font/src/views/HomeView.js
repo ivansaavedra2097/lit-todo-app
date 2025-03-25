@@ -1,4 +1,5 @@
 import { LitElement, html } from "lit-element";
+import { currentUser } from "../services/auth.services";
 
 export class HomeView extends LitElement {
 
@@ -19,10 +20,20 @@ export class HomeView extends LitElement {
         this.user = localStorage.getItem('todo-user') ?? null
     }
 
+    handleSetAppUser(event)  {
+        console.log('home-view', { event })
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        currentUser()
+        .then( user => this.user = user );
+    }
+
     renderView() {
         return this.user
             ? html`<h2>User logged in</h2>`
-            : html `<login-view></login-view>`
+            : html `<login-view @set-app-user="${this.handleSetAppUser}"></login-view>`
     }
 
     render() {

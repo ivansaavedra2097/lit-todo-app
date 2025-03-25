@@ -14,7 +14,8 @@ export class Connection {
         let connection;
         try {
             connection = await this.getConnection();
-            const [rows] = await connection.query(sql, values);
+            const resp = await connection.query(sql, values);
+            const [rows] = resp;
             return rows;
         } catch (error) {
             console.error('Error en la consulta:', error);

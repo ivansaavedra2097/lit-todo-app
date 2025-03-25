@@ -7,6 +7,11 @@ export class LoginView extends LitElement {
 
     static get styles() {
         return css`
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            } 
             main{
                 width: 100vw;
                 height: 100vh;
@@ -28,4 +33,4 @@ export class LoginView extends LitElement {
     }
 }
 
-customElements.define( LoginView.is, LoginView );
+customElements.define(LoginView.is, LoginView);

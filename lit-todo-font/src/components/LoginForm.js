@@ -1,4 +1,6 @@
 import { css, html, LitElement } from "lit-element";
+import { login } from "../services/auth.services";
+import { LS_TYPES } from "../types/index.js"
 
 export class LoginForm extends LitElement {
 
@@ -8,9 +10,6 @@ export class LoginForm extends LitElement {
 
     static get styles() {
         return css`
-            main {
-                
-            }
             #show-password {
                 position: absolute;
                 top: 25px;
@@ -25,26 +24,37 @@ export class LoginForm extends LitElement {
                 border: none;
                 cursor: pointer;
             }
+            form {
+                width: 70%;
+            }
             .container {
                 width: 100vw;
+                max-width: 620px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                background-color: red;
+                border: 1px solid gray;
+                padding: 30px 0;
+                border-radius: 8px;
             }
             .form-control {
                 width: 100%;
                 position: relative;
                 display: flex;
                 flex-direction: column;
-                /* background-color: red; */
-                padding: 5px 10px;
+                padding: 5px 0;
                 margin: 5px 0;
                 border-radius: 3px;
             }
+            label {
+                width: 100%;
+            }
             input {
                 height: 30px;
+            }
+            button:disabled {
+                cursor: auto;
             }
             button[type=submit] {
                 width: 100%;
@@ -63,6 +73,10 @@ export class LoginForm extends LitElement {
             button[type=submit]:hover {
                 background-color: #2323bb;
             }
+            button[type=submit]:disabled {
+                background-color: gray;
+                cursor: auto;
+            }
         `
     }
 
@@ -71,7 +85,8 @@ export class LoginForm extends LitElement {
             user: { type: String },
             password: { type: String },
             showPassword: { type: Boolean },
-            formState: { type: Object }
+            formState: { type: Object },
+            loading: { type: Boolean }
         }
     }
 
@@ -79,9 +94,15 @@ export class LoginForm extends LitElement {
         super();
         this.showPassword = false;
         this.formState = {
-            user: "",
-            password: ""
-        }
+            user: "caraperoo1@mail.com",
+            password: "123456"
+        },
+        this.loading = false;
+        this.errorMessage = "";
+    }
+
+    get isError() {
+        return Boolean( this.errorMessage );
     }
 
     onTogglePassword() {
@@ -90,20 +111,46 @@ export class LoginForm extends LitElement {
 
     eyeIcon() {
         return html`
-        <button type="button" id="show-password" @click="${this.onTogglePassword}">
-            <img  src="./src/icons/${ this.showPassword ? "eye-slash-fill.svg":"eye-fill.svg" }" alt="Icono de ojo" />
+        <button type="button" id="show-password" @click="${this.onTogglePassword}" ?disabled="${this.loading}">
+            <img  src="./src/icons/${this.showPassword ? "eye-slash-fill.svg" : "eye-fill.svg"}" alt="Icono de ojo" />
         </button>
         `
     }
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("submitting", { user: this.user, password: this.password, formState: this.formState })
+        this.handleLogin( this.formState.user, this.formState.password );
+        // console.log("submitting", { user: this.user, password: this.password, formState: this.formState })
     }
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.formState[ name ] = value.trim();
+        this.formState[name] = value.trim();
+    }
+
+    setAppUserEvent( user ) {
+        console.log('setAppUser', { user })
+        const event = new CustomEvent('set-app-user', {
+            detail: user,
+            bubbles: true,
+            composed: true
+        });
+        console.log({ event })
+        this.dispatchEvent( event );
+    }
+
+    async handleLogin( email, password ) {
+        this.loading = true;
+        try {
+            const { user, token }= await login( email, password );
+            console.log({ user, token });
+            localStorage.setItem( LS_TYPES.token, token );
+            this.setAppUserEvent( user );
+        } catch (error) {
+            this.errorMessage = error.message;
+        } finally {
+            this.loading = false;
+        }
     }
 
     render() {
@@ -116,6 +163,7 @@ export class LoginForm extends LitElement {
                             type="text" 
                             name="user" 
                             @input="${this.handleChange}" 
+                            ?disabled="${this.loading}"
                         />
                     </div>
                     <div class="form-control">
@@ -125,9 +173,12 @@ export class LoginForm extends LitElement {
                             type="${this.showPassword ? "text" : "password"}" 
                             name="password" 
                             @input="${this.handleChange}" 
+                            ?disabled="${this.loading}"
                         />
                     </div>
-                        <button type="submit">submit</button>
+                    <button type="submit" ?disabled="${this.loading}">
+                        ${this.loading ? "loading..." : "submit"}
+                    </button>
                 </form>
             </div>
         `

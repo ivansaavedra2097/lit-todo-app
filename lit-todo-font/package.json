@@ -5,16 +5,19 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "es-dev-server --app-index index.html --node-resolve --watch --open --port=8001"
+    "serve": "es-dev-server --app-index index.html --node-resolve --watch --open"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.8.4",
     "lit-element": "^4.1.1"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "es-dev-server": "^2.1.0"
   }
 }
