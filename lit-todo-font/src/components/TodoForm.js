@@ -47,10 +47,7 @@ export class TodoForm extends LitElement {
         return html`
             <form>
                 <text-input label="Title"></text-input>
-                <div>
-                    <label for="todo-textarea">Description</label>
-                    <textarea id="todo-textarea"></textarea>
-                </div>
+                <textarea-input label="Description"></textarea-input>
             </form>
         `
     }

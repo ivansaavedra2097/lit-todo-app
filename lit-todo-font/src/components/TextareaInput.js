@@ -1,19 +1,12 @@
-import { css, html, LitElement } from "lit-element";
+import { css, html, LitElement } from "lit-element"
 
-export class TextInput extends LitElement {
-    
+export class TextareaInput extends LitElement {
     static get is() {
-        return "text-input";
+        return "textarea-input";
     }
 
     static get styles() {
         return css`
-            :host {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: sans-serif;
-            }
             .form-control {
                 position: relative;
                 width: calc(100% - 10px);
@@ -24,36 +17,37 @@ export class TextInput extends LitElement {
                 padding: 10px 5px;
                 z-index: 0;
             }
+             textarea {
+                width: 100%;
+                height: 150px;
+                padding: 8px 8px;
+                box-sizing: border-box;
+                border: 2px solid #ccc;
+                border-radius: 4px;
+                background-color: #f8f8f8;
+                font-size: 16px;
+                resize: none;
+                outline: none;
+                font-family: sans-serif;
+            }
             .form-control > label {
                 position: absolute;
-                top: 17px;
-                left: 10px;
+                top: 20px;
+                left: 15px;
                 color: gray;
                 border-radius: 8px;
                 z-index: 0;
                 transition: all 0.10s linear;
             }
-            .form-control > input {
-                position: relative;
-                width: 100%;
-                height: 20px;
-                padding: 8px 8px;
-                z-index: 100;
-                background-color: transparent;
-                border: 1px transparent;
-                border-bottom: 2px solid gray;
-                outline: none;
-                font-size: 16px;
-            }
             .form-control.focused > label {
-                transform: translate(-4px, -17px);
+                transform: translate(-4px, -20px);
                 font-size: 12px;
                 padding: 3px 5px;
                 z-index: 200;
                 background-color: white;
             }
-            .form-control.active > input {
-                border-bottom:  2px solid #4971c5;
+            .form-control.active > textarea {
+                border: 2px solid #4971c5;
                 outline: 3px solid #0075ff4a;
                 border-radius: 3px;
             }
@@ -62,8 +56,8 @@ export class TextInput extends LitElement {
 
     static get properties() {
         return {
+            label: { type: Object },
             value: { type: String },
-            label: { type: String },
             focused: { type: Boolean }
         }
     }
@@ -74,16 +68,18 @@ export class TextInput extends LitElement {
         this.value = "";
         this.focused = false;
     }
-    
+
     get focusedClass() {
         return Boolean(this.value) || this.focused ? " focused " : " ";
     }
 
     onFocus(e) {
+        console.log('focused')
         this.focused = true;
     }
 
     onBlur(e) {
+        console.log('blur')
         this.focused = false;
     }
 
@@ -94,17 +90,17 @@ export class TextInput extends LitElement {
     render() {
         return html`
             <div class="form-control${this.focusedClass}${this.focused ? "active": ""}">
-                <label>${this.label}</label>
-                <input 
-                    type="text" 
+                <label for="todo-textarea">Description</label>
+                <textarea 
+                    id="todo-textarea"
                     .value="${this.value}" 
                     @input="${this.handleChange}" 
                     @focus="${this.onFocus}"
                     @blur="${this.onBlur}"
-                />
+                ></textarea>
             </div>
         `
     }
 }
 
-customElements.define( TextInput.is, TextInput );
+customElements.define(TextareaInput.is, TextareaInput);
