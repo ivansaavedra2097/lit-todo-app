@@ -129,13 +129,11 @@ export class LoginForm extends LitElement {
     }
 
     setAppUserEvent( user ) {
-        console.log('setAppUser', { user })
         const event = new CustomEvent('set-app-user', {
             detail: user,
             bubbles: true,
             composed: true
         });
-        console.log({ event })
         this.dispatchEvent( event );
     }
 
@@ -143,7 +141,6 @@ export class LoginForm extends LitElement {
         this.loading = true;
         try {
             const { user, token }= await login( email, password );
-            console.log({ user, token });
             localStorage.setItem( LS_TYPES.token, token );
             this.setAppUserEvent( user );
         } catch (error) {

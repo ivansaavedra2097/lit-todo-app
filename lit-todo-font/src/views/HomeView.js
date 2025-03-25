@@ -22,7 +22,8 @@ export class HomeView extends LitElement {
     }
 
     handleSetAppUser(event)  {
-        console.log('home-view', { event });
+        const user = event.detail;
+        this.user = user;
     }
 
     hanldeUnsetAppUser() {
