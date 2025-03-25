@@ -60,16 +60,19 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/current-user', async (req, res) => {
-    const bearerToken = req.headers.authorization;
+    const bearerToken = req.headers.authorization ?? null;
+
     try {
-        if (!bearerToken) throw new Error("No token sended");
+        if (!bearerToken || bearerToken.includes("null")) throw new Error("No token sended");
 
         const token = bearerToken.split(" ")[1];
+        console.log({ token })
 
         jwt.verify(
             token,
             process.env.SECRET_JWT,
             async (err, decoded) => {
+                console.log('error', {err })
                 if (err) throw new Error(err);
                 const user = await UserController.find( decoded?.id );
                 if( !user ) throw new Error("Invalid token");
@@ -78,13 +81,9 @@ router.get('/current-user', async (req, res) => {
             }
         );
 
-        console.log( cert )
     } catch (error) {
-
+        res.status(401).json({ message: error.message });
     }
-
-
-
 })
 
 // Ruta de Logout (ejemplo, se puede implementar de varias maneras)

@@ -11,24 +11,22 @@ export const login = async ( email, password ) => {
             },
             body: JSON.stringify({ email, password }),
         });
-
+        
         if( !resp.ok ) throw new Error( resp.statusText );
 
         const { user, token } = await resp.json();
 
         return { user, token }
     } catch (error) {
+        
         throw new Error( error )
-    }
+    }  
 }
 
 export const currentUser = async () => {
     try {
         const token = localStorage.getItem(LS_TYPES.token);
 
-        if( !token ) return null;
-
-        console.log({ token })
         const resp = await fetch(`${AuthBaseURL}/current-user`,{
             headers: {
                 "Authorization": `Bearer ${token}`

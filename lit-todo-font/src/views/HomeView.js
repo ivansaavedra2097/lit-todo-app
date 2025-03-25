@@ -1,5 +1,6 @@
 import { LitElement, html } from "lit-element";
 import { currentUser } from "../services/auth.services";
+import { LS_TYPES } from "../types";
 
 export class HomeView extends LitElement {
 
@@ -17,22 +18,28 @@ export class HomeView extends LitElement {
 
     constructor() {
         super();
-        this.user = localStorage.getItem('todo-user') ?? null
+        this.user = null;
     }
 
     handleSetAppUser(event)  {
-        console.log('home-view', { event })
+        console.log('home-view', { event });
+    }
+
+    hanldeUnsetAppUser() {
+        this.user = null;
+        localStorage.removeItem(LS_TYPES.token);
     }
 
     connectedCallback() {
         super.connectedCallback();
         currentUser()
-        .then( user => this.user = user );
+        .then( user => this.user = user )
+        .catch( err => console.error( err ))
     }
 
     renderView() {
         return this.user
-            ? html`<h2>User logged in</h2>`
+            ? html`<app-view .user="${this.user}" @unset-app-user="${this.hanldeUnsetAppUser}"></app-view>`
             : html `<login-view @set-app-user="${this.handleSetAppUser}"></login-view>`
     }
 
