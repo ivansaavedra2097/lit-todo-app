@@ -18,9 +18,7 @@ router.post('/register', async (req, res) => {
             'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
             [username, email, hashedPassword]
         );
-        console.log({ resp })
         const [result] = resp;
-        console.log({ result })
         res.json({ id: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -66,13 +64,11 @@ router.get('/current-user', async (req, res) => {
         if (!bearerToken || bearerToken.includes("null")) throw new Error("No token sended");
 
         const token = bearerToken.split(" ")[1];
-        console.log({ token })
 
         jwt.verify(
             token,
             process.env.SECRET_JWT,
             async (err, decoded) => {
-                console.log('error', {err })
                 if (err) throw new Error(err);
                 const user = await UserController.find( decoded?.id );
                 if( !user ) throw new Error("Invalid token");

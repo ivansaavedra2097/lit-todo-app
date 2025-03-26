@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "lit-element";
+import { getTodos } from "../services/todos.services";
 
 export class AppView extends LitElement {
 
@@ -23,15 +24,30 @@ export class AppView extends LitElement {
 
     static get properties(){
         return {
-            user: { type: Object }
+            user: { type: Object },
+            todos: { type: Array }
         }
     }
 
     constructor() {
         super();
         this.user = null;
+        this.todos = []
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        this.onGetUserTodos();
+    }
+
+    async onGetUserTodos() {
+        try {
+            const todos = await getTodos();
+            this.todos = todos;
+        } catch (error) {
+            console.error( error.message );
+        }
+    }
 
     render() {
         return html`
