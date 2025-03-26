@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     const { title, description } = req.body;
     try {
         const { id } = await JWT.verify( req.headers.authorization );
-        const todo = await TodoController.create({
+        const [ todo ] = await TodoController.create({
             title,
             description,
             user_id: id

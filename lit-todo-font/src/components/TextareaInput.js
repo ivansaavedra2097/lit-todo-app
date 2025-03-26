@@ -58,6 +58,7 @@ export class TextareaInput extends LitElement {
         return {
             label: { type: Object },
             value: { type: String },
+            name: { type: String },
             focused: { type: Boolean }
         }
     }
@@ -66,6 +67,7 @@ export class TextareaInput extends LitElement {
         super();
         this.label = "";
         this.value = "";
+        this.name = "";
         this.focused = false;
     }
 
@@ -83,6 +85,12 @@ export class TextareaInput extends LitElement {
 
     handleChange(e) {
         this.value = e.target.value;
+        const event = new CustomEvent("input-change", {
+            bubbles: true,
+            composed: true,
+            detail: { name: this.name, value: this.value }
+        });
+        this.dispatchEvent(event);
     }
 
     render() {

@@ -16,13 +16,13 @@ export class TodoController {
 
     static async create({ title, description, user_id }) {
         try {
-            const [ result ] = await pool.query(`INSERT INTO todos (title, description, user_id, completed) VALUES (?,?,?,?)`,[
+            const resp = await pool.query(`INSERT INTO todos (title, description, user_id, completed) VALUES (?,?,?,?)`,[
                 title,
                 description,
                 user_id,
                 false
             ]);
-            const todo = await pool.query(`SELECT * FROM todos WHERE id = ?`, [ result.insertId ]);
+            const todo = await pool.query(`SELECT * FROM todos WHERE id = ?`, [ resp.insertId ]);
             return todo;
         } catch (error) {
             throw new Error( error.message );

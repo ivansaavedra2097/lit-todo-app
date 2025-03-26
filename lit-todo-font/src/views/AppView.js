@@ -37,13 +37,19 @@ export class AppView extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        this.onGetUserTodos();
+        this.onGetUserTodos()
+            .then( todos => this.todos = todos );
+    }
+
+    handleAddTodo(event) {
+        const todo = event.detail;
+        this.todos = [ ...this.todos, todo ];
     }
 
     async onGetUserTodos() {
         try {
             const todos = await getTodos();
-            this.todos = todos;
+            return todos;
         } catch (error) {
             console.error( error.message );
         }
@@ -53,7 +59,10 @@ export class AppView extends LitElement {
         return html`
             <my-navbar .username="${this.user?.username}"></my-navbar>
             <main>
-                <todo-form></todo-form>
+                <todo-form @add-todo="${this.handleAddTodo}"></todo-form>
+                <pre>
+                    ${ JSON.stringify(this.todos, null, 3)}
+                </pre> 
             </main>
         `
     }

@@ -1,4 +1,5 @@
 import { css, html, LitElement } from "lit-element";
+import { createTodo } from "../services/todos.services";
 
 export class TodoForm extends LitElement {
 
@@ -50,29 +51,66 @@ export class TodoForm extends LitElement {
 
     static get properties() {
         return {
-            todo: { type: Object }
+            title: { type: String },
+            description: { type: String },
+            loading: { type: Boolean }
         }
     }
 
     constructor() {
         super();
-        this.todo = {
-            title: "titulo",
-            description: ""
-        }
+        this.title = "";
+        this.description = "";
+        this.loading = false;
     }
 
     handleChange(e) {
         const { name, value } = e.target;
-        this.todo[name] = value;
+        this[name] = value; // <--  Actualizamos las propiedades title o description
+    }
+
+    addTodo( todo ) {
+        const event = new CustomEvent('add-todo', {
+            bubbles: true,
+            composed: true,
+            detail: todo
+        });
+        this.dispatchEvent( event );
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        try {
+            const todo = await createTodo(
+                this.title,
+                this.description
+            );
+            this.addTodo( todo );
+            this.title = "";
+        this.description = "";
+        } catch (error) {
+            
+        }
     }
 
     render() {
         return html`
-            <form>
-                <text-input label="Title" .value="${this.todo.title}"></text-input>
-                <textarea-input label="Description" .value="${this.todo.description}"></textarea-input>
-                <button ?disabled="${true}">create</button>
+            <form @submit="${this.handleSubmit}">
+                <text-input 
+                    label="Title"
+                    name="title" 
+                    .value="${this.title}"
+                    @input-change=${this.handleChange}
+                ></text-input>
+                <textarea-input 
+                    label="Description" 
+                    name="description"
+                    .value="${this.description}"
+                    @input-change="${this.handleChange}"
+                ></textarea-input>
+                <button ?disabled="${this.loading}">
+                    ${ this.loading ? "loading...": "create" }
+                </button>
             </form>
         `
     }

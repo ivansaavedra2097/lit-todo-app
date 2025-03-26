@@ -64,6 +64,7 @@ export class TextInput extends LitElement {
         return {
             value: { type: String },
             label: { type: String },
+            name: { type: String },
             focused: { type: Boolean }
         }
     }
@@ -72,6 +73,7 @@ export class TextInput extends LitElement {
         super();
         this.label = "";
         this.value = "";
+        this.name = "";
         this.focused = false;
     }
     
@@ -89,6 +91,12 @@ export class TextInput extends LitElement {
 
     handleChange(e) {
         this.value = e.target.value;
+        const event = new CustomEvent("input-change", {
+            bubbles: true,
+            composed: true,
+            detail: { name: this.name, value: this.value }
+        });
+        this.dispatchEvent(event);
     }
 
     render() {

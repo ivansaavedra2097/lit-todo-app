@@ -20,6 +20,7 @@ export const getTodos = async () => {
 }
 
 export const createTodo = async (title, description) => {
+    console.log({ title, description })
     const token = localStorage.getItem(LS_TYPES.token) ?? null;
 
     try {
@@ -32,7 +33,8 @@ export const createTodo = async (title, description) => {
             body: JSON.stringify({ title, description })
         });
 
-        console.log({ resp })
+        const { todo } = await resp.json();
+        return todo; 
     } catch (error) {
         throw new Error(error.message);
     }
